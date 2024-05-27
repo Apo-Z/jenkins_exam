@@ -4,7 +4,7 @@ metadata:
   name: pvc_{{ .Values.movie_db.name }}
 spec:
   accessModes:
-    _ {{ .Values.movie_db.pvc.accessMode }}
+    - {{ .Values.movie_db.pvc.accessMode }}
   storageClassName: {{ .Values.movie_db.pvc.storageClassName }}
   resources:
     requests:
@@ -48,7 +48,7 @@ spec:
   selector:
     app: {{ .Values.movie_db.name }}
   ports:
-    _ protocol: {{ .Values.movie_db.service.protocol }}
+    - protocol: {{ .Values.movie_db.service.protocol }}
       port: {{ .Values.movie_db.service.port }}
       targetPort: {{ .Values.movie_db.deployment.ports }}
       nodePort: {{ .Values.movie_db.service.nodePort }}
@@ -72,17 +72,17 @@ spec:
         app: {{ .Values.movie_db.name }}
     spec:
       containers:
-        _ name: {{ .Values.movie_db.deployment.name }}
+        - name: {{ .Values.movie_db.deployment.name }}
           image: "{{ .Values.movie_db.deployment.image.repository }}:{{ .Values.movie_db.deployment.image.tag | default .Values.imageTag }}"
           ports:
-            _ containerPort: {{ .Values.movie_db.deployment.ports }}
+            - containerPort: {{ .Values.movie_db.deployment.ports }}
           volumeMounts:
-            _ name: db
+            - name: db
               mountPath: /var/lib/postgresql/data/
           envFrom:
-            _ secretRef:
+            - secretRef:
                 name: {{ .Values.movie_db.name }}
       volumes:
-        _ name: db
+        - name: db
           persistentVolumeClaim:
             claimName: pvc_{{ .Values.movie_db.name }}
