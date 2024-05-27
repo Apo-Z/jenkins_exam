@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc_{{ .Values.movie_db.name }}
+  name: pvc-movie-db
 spec:
   accessModes:
     - {{ .Values.movie_db.pvc.accessMode }}
@@ -85,4 +85,4 @@ spec:
       volumes:
         - name: db
           persistentVolumeClaim:
-            claimName: pvc_{{ .Values.movie_db.name }}
+            claimName: pvc-movie-db

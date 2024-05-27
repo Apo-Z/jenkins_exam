@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-{{ .Values.cast_db.name }}
+  name: pvc-cast-db
 spec:
   accessModes:
     - {{ .Values.cast_db.pvc.accessMode }}
@@ -85,4 +85,4 @@ spec:
       volumes:
         - name: db
           persistentVolumeClaim:
-            claimName: pvc-{{ .Values.cast_db.name }}
+            claimName: pvc-cast-db
