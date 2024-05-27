@@ -163,6 +163,8 @@ def deployToenvironment(env) {
                 sh "kubectl create configmap nginx-config --from-file=nginx_config.conf --namespace $env"
             } catch (Exception e) {
                 echo "Le ConfigMap existe déjà. Continuer le déploiement..."
+            }
+        }
             sh '''
                 
                 sudo helm upgrade --install app helm/ \
@@ -175,4 +177,3 @@ def deployToenvironment(env) {
                 '''
         }
     }
-}
