@@ -6,6 +6,7 @@ pipeline {
         DOCKER_CAST_IMAGE = "jenkins-exam-cast_service"
         DOCKER_MOVIE_IMAGE = "jenkins-exam-movie_service"
         DOCKER_TAG = "v.${BUILD_ID}.0"
+
     }
     agent any
     stages {
@@ -147,6 +148,14 @@ pipeline {
 }
 
 def deployToenvironment(env) {
+    environment {
+        CAST_DB_USER = credentials(CAST_POSTGRES_USER)
+        CAST_DB_PASSWORD = credentials(CAST_POSTGRES_PASSWORD)
+        CAST_DB_NAME = credentials(CAST_POSTGRES_DB)
+        MOVIE_DB_USER = credentials(MOVIE_POSTGRES_USER)
+        MOVIE_DB_PASSWORD = credentials(MOVIE_POSTGRES_PASSWORD)
+        MOVIE_DB_NAME = credentials(MOVIE_POSTGRES_DB)
+    }
     withEnv(["NAMESPACE=${env}"]) {
         sh '''
             sudo helm upgrade --install app helm/ \
