@@ -104,6 +104,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Deploy to Dev') {
             steps {
                 script {
@@ -158,7 +159,6 @@ def deployToenvironment(env) {
     }
     withEnv(["NAMESPACE=${env}"]) {
         sh '''
-            kubectl create configmap nginx-config --from-file=nginx_config.conf -n $NAMESPACE
             sudo helm upgrade --install app helm/ \
                 --values=helm/values.yaml \
                 --namespace $NAMESPACE \
