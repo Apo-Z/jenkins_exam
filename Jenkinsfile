@@ -7,7 +7,12 @@ pipeline {
         DOCKER_MOVIE_IMAGE = "jenkins-exam-movie_service"
         DOCKER_TAG = "v.${BUILD_ID}.0"
     }
-    agent any
+    agent {
+        docker {
+            image 'docker:latest'
+            args '--privileged'
+        }
+    }
     stages {
         stage('Init Docker Compose') {
             steps {
@@ -149,11 +154,8 @@ pipeline {
 def deployToenvironment(env) {
     withEnv(["NAMESPACE=${env}"]) {
         sh '''
-            cat .kube/config
-            cp helm/values.yaml values.yaml
-            cat values.yaml
             helm upgrade --install app helm/ \
-                --values=values.yaml \
+                --values=helm/values.yaml \
                 --namespace $NAMESPACE \
                 --set movie_service.image.repository=$DOCKER_MOVIE_IMAGE \
                 --set movie_service.image.tag=$DOCKER_TAG \
