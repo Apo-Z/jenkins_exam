@@ -150,8 +150,8 @@ def deployToenvironment(env) {
     withEnv(["NAMESPACE=${env}"]) {
         sh '''
             cat .kube/config
-            cp helm/values.yaml
-            cat values.yaml values.yaml
+            cp helm/values.yaml values.yaml
+            cat values.yaml
             helm upgrade --install app helm/ \
                 --values=values.yaml \
                 --namespace $NAMESPACE \
