@@ -53,5 +53,5 @@ spec:
           ports:
             - containerPort: {{ .Values.movie_service.deployment.ports }}
           env:
-            - DATABASE_URI: postgresql://{{ .Values.movie_db.username }}:{{ .Values.movie_db.password }}@{{ .Values.movie_db.name }}/{{ .Values.movi_db.secret.db }}
+            - DATABASE_URI: postgresql://{{ .Values.movie_db.username }}:{{ .Values.movie_db.password }}@{{ .Values.movie_db.name }}/{{ .Values.movie_db.secret.db }}
             - CAST_SERVICE: http://{{ .Values.cast_service.name }}:{{ .Values.cast_service.service.port }}/api/v1/casts
