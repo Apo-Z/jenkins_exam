@@ -6,7 +6,6 @@ pipeline {
         DOCKER_CAST_IMAGE = "jenkins-exam-cast_service"
         DOCKER_MOVIE_IMAGE = "jenkins-exam-movie_service"
         DOCKER_TAG = "v.${BUILD_ID}.0"
-
     }
     agent any
     stages {
