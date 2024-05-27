@@ -135,7 +135,7 @@ pipeline {
         }
     }
     post {
-        failed {
+        failure {
             echo "This will run if the job failed"
             mail to: "alimoviee@gmail.com",
                 subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} has failed",
