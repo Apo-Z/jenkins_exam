@@ -27,7 +27,7 @@ data:
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: hpa_{{ .Values.movie_db.name }}
+  name: hpa-{{ .Values.movie_db.name }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
