@@ -23,21 +23,20 @@ data:
   POSTGRES_PASSWORD: {{ .Values.movie_db.secret.password | b64enc }}
 
 ---
+
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
- name: hpa-{{ .Values.movie_db.name }}
- namespace: {{ .Values.namespace }}
+  name: hpa-{{ .Values.movie_db.name }}
+  namespace: {{ .Values.namespace }}
 spec:
- scaleTargetRef:
-   apiVersion: apps/v1
-   kind: {{ .Values.movie_db.deployment.kind }}
-   name: {{ .Values.movie_db.name }}
- minReplicas: {{ .Values.movie_db.hpa.minReplicas }}
- maxReplicas: {{ .Values.movie_db.hpa.maxReplicas }}
- targetCPUUtilizationPercentage: {{ .Values.movie_db.hpa.targetCPUUtilizationPercentage }}
-
-
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: {{ .Values.movie_db.deployment.kind }}
+    name: {{ .Values.movie_db.name }}
+  minReplicas: {{ .Values.movie_db.hpa.minReplicas }}
+  maxReplicas: {{ .Values.movie_db.hpa.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .Values.movie_db.hpa.targetCPUUtilizationPercentage }}
 
 ---
 
@@ -53,7 +52,7 @@ spec:
     - protocol: {{ .Values.movie_db.service.protocol }}
       port: {{ .Values.movie_db.service.port }}
       targetPort: {{ .Values.movie_db.deployment.ports }}
-      nodePort: {{ .Values.movie_db.service.nodeport }} 
+      nodePort: {{ .Values.movie_db.service.nodePort }}
 
 ---
 
@@ -79,12 +78,12 @@ spec:
           ports:
             - containerPort: {{ .Values.movie_db.deployment.ports }}
           volumeMounts:
-            - db
-            mountPath: /var/lib/postgresql/data/
+            - name: db
+              mountPath: /var/lib/postgresql/data/
           envFrom:
             - secretRef:
-              name: {{ .Values.movie_db.name }}
+                name: {{ .Values.movie_db.name }}
       volumes:
         - name: db
-        persistentVolumeClaim:
-          claimName: pvc-{{ .Values.movie_db.name }}
+          persistentVolumeClaim:
+            claimName: pvc-{{ .Values.movie_db.name }}
