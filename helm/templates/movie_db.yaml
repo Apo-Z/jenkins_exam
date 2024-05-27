@@ -15,7 +15,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ .Values.movie_db.name }}
+  name: movie-db
 type: Opaque
 data:
   POSTGRES_DB: {{ .Values.movie_db.secret.db | b64enc }}

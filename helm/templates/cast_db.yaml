@@ -15,7 +15,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ .Values.cast_db.name }}
+  name: cast-db
 type: Opaque
 data:
   POSTGRES_DB: {{ .Values.cast_db.secret.db | b64enc }}
