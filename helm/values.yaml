@@ -51,9 +51,9 @@ movie_db:
     storage: 10Gi
     storageClassName: local-path  
   secret:
-    db: ''
-    username: ''
-    password: ''
+    db: 'admin'
+    username: 'admin'
+    password: 'password'
 
 cast_service:
   name: cast_service
