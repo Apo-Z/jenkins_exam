@@ -149,9 +149,11 @@ pipeline {
 def deployToenvironment(env) {
     withEnv(["NAMESPACE=${env}"]) {
         sh '''
-            cat .kube/config                  
+            cat .kube/config
+            cp helm/values.yaml
+            cat values.yaml
             helm upgrade --install app helm/ \
-                --values=helm/values.yaml \
+                --values=values.yaml \
                 --namespace $NAMESPACE \
                 --set movie_service.image.repository=$DOCKER_MOVIE_IMAGE \
                 --set movie_service.image.tag=$DOCKER_TAG \
