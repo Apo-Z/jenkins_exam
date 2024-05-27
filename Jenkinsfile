@@ -158,14 +158,21 @@ def deployToenvironment(env) {
         MOVIE_DB_NAME = credentials(MOVIE_POSTGRES_DB)
     }
     withEnv(["NAMESPACE=${env}"]) {
-        sh '''
-            sudo helm upgrade --install app helm/ \
-                --values=helm/values.yaml \
-                --namespace $NAMESPACE \
-                --set movie_service.image.repository=$DOCKER_MOVIE_IMAGE \
-                --set movie_service.image.tag=$DOCKER_TAG \
-                --set cast_service.image.repository=$DOCKER_CAST_IMAGE \
-                --set cast_service.image.tag=$DOCKER_TAG \
-            '''
+        script {
+            try {
+                sh "kubectl create configmap nginx-config --from-file=nginx_config.conf --namespace $env"
+            } catch (Exception e) {
+                echo "Le ConfigMap existe déjà. Continuer le déploiement..."
+            sh '''
+                
+                sudo helm upgrade --install app helm/ \
+                    --values=helm/values.yaml \
+                    --namespace $NAMESPACE \
+                    --set movie_service.image.repository=$DOCKER_MOVIE_IMAGE \
+                    --set movie_service.image.tag=$DOCKER_TAG \
+                    --set cast_service.image.repository=$DOCKER_CAST_IMAGE \
+                    --set cast_service.image.tag=$DOCKER_TAG \
+                '''
+        }
     }
 }
