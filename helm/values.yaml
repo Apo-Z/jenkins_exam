@@ -5,13 +5,13 @@
 imagePullSecrets:
   - name: regcred
 
-gateway:
-  name: gateway
+movie_service:
+  name: movie_service
   deployment:
     kind: Deployment
-    name: gateway
+    name: movie_service
     image:
-      repository: "apooz/gitlab-devops-exam-gateway"
+      repository: "apooz/jenkins-exam-movie_service"
       tag: ""
     replicaCount: 3
     ports: 8000
@@ -20,7 +20,7 @@ gateway:
     maxReplicas: 6
     targetCPUUtilizationPercentage: 70
   service:
-    type: NodePort
+    type: ClusterIP
     protocol: TCP
     port: 8001
   pvc:
@@ -28,13 +28,40 @@ gateway:
     storage: 10Gi
     storageClassName: local-path  
 
-users:
-  name: users
+movie_db:
+  name: movie_db
+  deployment:
+    kind: StatefulSets
+    name: movie_db
+    image:
+      repository: "postgres"
+      tag: "12.1-alpine"
+    replicaCount: 3
+    ports: 5432
+  hpa:
+    minReplicas: 3
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+  service:
+    type: ClusterIP
+    protocol: TCP
+    port: 5432
+  pvc:
+    accessMode: ReadWriteOnce
+    storage: 10Gi
+    storageClassName: local-path  
+  secret:
+    db: ''
+    username: ''
+    password: ''
+
+cast_service:
+  name: cast_service
   deployment:
     kind: Deployment
-    name: users
+    name: cast_service
     image:
-      repository: "apooz/gitlab-devops-exam-users"
+      repository: "apooz/jenkins-exam-cast_service"
       tag: ""
     replicaCount: 3
     ports: 8000
@@ -45,22 +72,22 @@ users:
   service:
     type: ClusterIP
     protocol: TCP
-    port: 8000
+    port: 8002
   pvc:
     accessMode: ReadWriteOnce
     storage: 10Gi
     storageClassName: local-path  
 
-orders:
-  name: orders
+cast_db:
+  name: cast_db
   deployment:
-    kind: Deployment
-    name: orders
+    kind: StatefulSets
+    name: cast_db
     image:
-      repository: "apooz/gitlab-devops-exam-users"
-      tag: ""
+      repository: "postgres"
+      tag: "12.1-alpine"
     replicaCount: 3
-    ports: 8000
+    ports: 5432
   hpa:
     minReplicas: 3
     maxReplicas: 6
@@ -68,9 +95,32 @@ orders:
   service:
     type: ClusterIP
     protocol: TCP
-    port: 8000
+    port: 5432
   pvc:
     accessMode: ReadWriteOnce
     storage: 10Gi
     storageClassName: local-path  
+  secret:
+    db: ''
+    username: ''
+    password: ''
 
+
+nginx:
+  name: nginx
+  deployment:
+    kind: Deployment
+    name: nginx
+    image:
+      repository: "nginx"
+      tag: "latest"
+    replicaCount: 3
+    ports: 8080
+  hpa:
+    minReplicas: 3
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+  service:
+    type: NodePort
+    protocol: TCP
+    port: 8080

@@ -1,0 +1,66 @@
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: hpa-{{ .Values.nginx.name }}
+ namespace: {{ .Values.namespace }}
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: {{ .Values.nginx.deployment.kind }}
+   name: {{ .Values.nginx.name }}
+ minReplicas: {{ .Values.nginx.hpa.minReplicas }}
+ maxReplicas: {{ .Values.nginx.hpa.maxReplicas }}
+ targetCPUUtilizationPercentage: {{ .Values.nginx.hpa.targetCPUUtilizationPercentage }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.nginx.name }}
+spec:
+  type: {{ .Values.nginx.service.type }}
+  selector:
+    app: {{ .Values.nginx.name }}
+  ports:
+    - protocol: {{ .Values.nginx.service.protocol }}
+      port: {{ .Values.nginx.service.port }}
+      targetPort: {{ .Values.nginx.deployment.ports }}
+      nodePort: {{ .Values.nginx.service.nodeport }} 
+
+---
+
+
+apiVersion: apps/v1
+kind: {{ .Values.nginx.deployment.kind }}
+metadata:
+  name: {{ .Values.nginx.name }}
+  labels:
+    app: {{ .Values.nginx.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.nginx.name }}
+  replicas: {{ .Values.nginx.deployment.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.nginx.name }}
+    spec:
+      containers:
+        - name: {{ .Values.nginx.deployment.name }}
+          image: "{{ .Values.nginx.deployment.image.repository }}:{{ .Values.nginx.deployment.image.tag | default .Values.imageTag }}"
+          ports:
+            - containerPort: {{ .Values.nginx.deployment.ports }}
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+              - keys: nginx.conf
+                path: nginx.conf

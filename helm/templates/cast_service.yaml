@@ -1,0 +1,57 @@
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: hpa-{{ .Values.cast_service.name }}
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: {{ .Values.cast_service.deployment.kind }}
+   name: {{ .Values.cast_service.name }}
+ minReplicas: {{ .Values.cast_service.hpa.minReplicas }}
+ maxReplicas: {{ .Values.cast_service.hpa.maxReplicas }}
+ targetCPUUtilizationPercentage: {{ .Values.cast_service.hpa.targetCPUUtilizationPercentage }}
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.cast_service.name }}
+spec:
+  type: {{ .Values.cast_service.service.type }}
+  selector:
+    app: {{ .Values.cast_service.name }}
+  ports:
+    - protocol: {{ .Values.cast_service.service.protocol }}
+      port: {{ .Values.cast_service.service.port }}
+      targetPort: {{ .Values.cast_service.deployment.ports }}
+      nodePort: {{ .Values.cast_service.service.nodeport }} 
+
+---
+
+apiVersion: apps/v1
+kind: {{ .Values.cast_service.deployment.kind }}
+metadata:
+  name: {{ .Values.cast_service.name }}
+  labels:
+    app: {{ .Values.cast_service.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.cast_service.name }}
+  replicas: {{ .Values.cast_service.deployment.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.cast_service.name }}
+    spec:
+      containers:
+        - name: {{ .Values.cast_service.deployment.name }}
+          image: "{{ .Values.cast_service.deployment.image.repository }}:{{ .Values.cast_service.deployment.image.tag | default .Values.imageTag }}"
+          command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+          ports:
+            - containerPort: {{ .Values.cast_service.deployment.ports }}
+          env:
+            - DATABASE_URI: postgresql://{{ .Values.movie_db.username }}:{{ .Values.movie_db.password }}@{{ .Values.movie_db.name }}/{{ .Values.movi_db.secret.db }}
+            - CAST_SERVICE: http://{{ .Values.cast_service.name }}:{{ .Values.cast_service.service.port }}/api/v1/casts
