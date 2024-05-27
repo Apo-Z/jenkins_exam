@@ -1,7 +1,7 @@
 // Prévoir un kubectl create configmap nginx-config --from-file=nginx_conf.conf
 
 pipeline {
-    environnement {
+    environment {
         DOCKER_ID = "apooz"
         DOCKER_CAST_IMAGE = "jenkins-exam-cast_service"
         DOCKER_MOVIE_IMAGE = "jenkins-exam-movie_service"
@@ -62,7 +62,7 @@ pipeline {
             }
         }
         stage('Docker Push') {
-            environnement {
+            environment {
                 DOCKER_PASS = credentials("DOCKER_HUB_PASS")
             }
             parallel {
@@ -104,7 +104,7 @@ pipeline {
         stage('Deploy to Dev') {
             steps {
                 script {
-                    deployToEnvironnement('dev')
+                    deployToenvironment('dev')
                 }
             }
         }
@@ -112,7 +112,7 @@ pipeline {
         stage('Deploy to QA') {
             steps {
                 script {
-                    deployToEnvironnement('qa')
+                    deployToenvironment('qa')
                 }
             }
         }
@@ -120,7 +120,7 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 script {
-                    deployToEnvironnement('staging')
+                    deployToenvironment('staging')
                 }
             }
         }
@@ -129,7 +129,7 @@ pipeline {
             steps {
                 input message: 'Deploy to production?', ok: 'Deploy'
                 script {
-                    deployToEnvironnement('prod')
+                    deployToenvironment('prod')
                 }
             }
         }
@@ -144,7 +144,7 @@ pipeline {
     }
 }
 
-def deployToEnvironnement(env) {
+def deployToenvironment(env) {
     withEnv(["NAMESPACE=${env}"]) {
         sh '''
             rm -Rf .kube
