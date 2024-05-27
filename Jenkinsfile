@@ -88,6 +88,9 @@ pipeline {
             }
         }
         stage('Setup Kubernetes Config') {
+            environment {
+                KUBE_CONFIG = credentials("config")
+            }
             steps {
                 script {
                     sh '''
@@ -145,12 +148,8 @@ pipeline {
 
 def deployToenvironment(env) {
     withEnv(["NAMESPACE=${env}"]) {
-        sh '''
-            rm -Rf .kube
-            mkdir .kube
-            ls
-            cat $KUBECONFIG > .kube/config                     
-            sudo helm upgrade --install app helm/ \
+        sh '''                  
+            helm upgrade --install app helm/ \
                 --values=helm/values.yaml \
                 --namespace $NAMESPACE \
                 --set movie_service.image.repository=$DOCKER_MOVIE_IMAGE \
