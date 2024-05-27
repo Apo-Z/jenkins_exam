@@ -31,7 +31,7 @@ movie_service:
 movie_db:
   name: movie_db
   deployment:
-    kind: StatefulSets
+    kind: StatefulSet
     name: movie_db
     image:
       repository: "postgres"
