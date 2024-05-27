@@ -1,88 +1,88 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-{{ .Values.movie_db.name }}
+  name: pvc-{{ .Values.movie-db.name }}
 spec:
   accessModes:
-    - {{ .Values.movie_db.pvc.accessMode }}
-  storageClassName: {{ .Values.movie_db.pvc.storageClassName }}
+    - {{ .Values.movie-db.pvc.accessMode }}
+  storageClassName: {{ .Values.movie-db.pvc.storageClassName }}
   resources:
     requests:
-      storage: {{ .Values.movie_db.pvc.storage }}
+      storage: {{ .Values.movie-db.pvc.storage }}
 
 ---
 
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ .Values.movie_db.name }}
+  name: {{ .Values.movie-db.name }}
 type: Opaque
 data:
-  POSTGRES_DB: {{ .Values.movie_db.secret.db | b64enc }}
-  POSTGRES_USER: {{ .Values.movie_db.secret.username | b64enc }}
-  POSTGRES_PASSWORD: {{ .Values.movie_db.secret.password | b64enc }}
+  POSTGRES_DB: {{ .Values.movie-db.secret.db | b64enc }}
+  POSTGRES_USER: {{ .Values.movie-db.secret.username | b64enc }}
+  POSTGRES_PASSWORD: {{ .Values.movie-db.secret.password | b64enc }}
 
 ---
 
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: hpa-{{ .Values.movie_db.name }}
+  name: hpa-{{ .Values.movie-db.name }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
-    kind: {{ .Values.movie_db.deployment.kind }}
-    name: {{ .Values.movie_db.name }}
-  minReplicas: {{ .Values.movie_db.hpa.minReplicas }}
-  maxReplicas: {{ .Values.movie_db.hpa.maxReplicas }}
-  targetCPUUtilizationPercentage: {{ .Values.movie_db.hpa.targetCPUUtilizationPercentage }}
+    kind: {{ .Values.movie-db.deployment.kind }}
+    name: {{ .Values.movie-db.name }}
+  minReplicas: {{ .Values.movie-db.hpa.minReplicas }}
+  maxReplicas: {{ .Values.movie-db.hpa.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .Values.movie-db.hpa.targetCPUUtilizationPercentage }}
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.movie_db.name }}
+  name: {{ .Values.movie-db.name }}
 spec:
-  type: {{ .Values.movie_db.service.type }}
+  type: {{ .Values.movie-db.service.type }}
   selector:
-    app: {{ .Values.movie_db.name }}
+    app: {{ .Values.movie-db.name }}
   ports:
-    - protocol: {{ .Values.movie_db.service.protocol }}
-      port: {{ .Values.movie_db.service.port }}
-      targetPort: {{ .Values.movie_db.deployment.ports }}
-      nodePort: {{ .Values.movie_db.service.nodePort }}
+    - protocol: {{ .Values.movie-db.service.protocol }}
+      port: {{ .Values.movie-db.service.port }}
+      targetPort: {{ .Values.movie-db.deployment.ports }}
+      nodePort: {{ .Values.movie-db.service.nodePort }}
 
 ---
 
 apiVersion: apps/v1
-kind: {{ .Values.movie_db.deployment.kind }}
+kind: {{ .Values.movie-db.deployment.kind }}
 metadata:
-  name: {{ .Values.movie_db.name }}
+  name: {{ .Values.movie-db.name }}
   labels:
-    app: {{ .Values.movie_db.name }}
+    app: {{ .Values.movie-db.name }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.movie_db.name }}
-  replicas: {{ .Values.movie_db.deployment.replicaCount }}
+      app: {{ .Values.movie-db.name }}
+  replicas: {{ .Values.movie-db.deployment.replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ .Values.movie_db.name }}
+        app: {{ .Values.movie-db.name }}
     spec:
       containers:
-        - name: {{ .Values.movie_db.deployment.name }}
-          image: "{{ .Values.movie_db.deployment.image.repository }}:{{ .Values.movie_db.deployment.image.tag | default .Values.imageTag }}"
+        - name: {{ .Values.movie-db.deployment.name }}
+          image: "{{ .Values.movie-db.deployment.image.repository }}:{{ .Values.movie-db.deployment.image.tag | default .Values.imageTag }}"
           ports:
-            - containerPort: {{ .Values.movie_db.deployment.ports }}
+            - containerPort: {{ .Values.movie-db.deployment.ports }}
           volumeMounts:
             - name: db
               mountPath: /var/lib/postgresql/data/
           envFrom:
             - secretRef:
-                name: {{ .Values.movie_db.name }}
+                name: {{ .Values.movie-db.name }}
       volumes:
         - name: db
           persistentVolumeClaim:
-            claimName: pvc-{{ .Values.movie_db.name }}
+            claimName: pvc-{{ .Values.movie-db.name }}

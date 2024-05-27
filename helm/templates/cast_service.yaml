@@ -2,56 +2,56 @@
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
- name: hpa-{{ .Values.cast_service.name }}
+ name: hpa-{{ .Values.cast-service.name }}
 spec:
  scaleTargetRef:
    apiVersion: apps/v1
-   kind: {{ .Values.cast_service.deployment.kind }}
-   name: {{ .Values.cast_service.name }}
- minReplicas: {{ .Values.cast_service.hpa.minReplicas }}
- maxReplicas: {{ .Values.cast_service.hpa.maxReplicas }}
- targetCPUUtilizationPercentage: {{ .Values.cast_service.hpa.targetCPUUtilizationPercentage }}
+   kind: {{ .Values.cast-service.deployment.kind }}
+   name: {{ .Values.cast-service.name }}
+ minReplicas: {{ .Values.cast-service.hpa.minReplicas }}
+ maxReplicas: {{ .Values.cast-service.hpa.maxReplicas }}
+ targetCPUUtilizationPercentage: {{ .Values.cast-service.hpa.targetCPUUtilizationPercentage }}
 
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.cast_service.name }}
+  name: {{ .Values.cast-service.name }}
 spec:
-  type: {{ .Values.cast_service.service.type }}
+  type: {{ .Values.cast-service.service.type }}
   selector:
-    app: {{ .Values.cast_service.name }}
+    app: {{ .Values.cast-service.name }}
   ports:
-    - protocol: {{ .Values.cast_service.service.protocol }}
-      port: {{ .Values.cast_service.service.port }}
-      targetPort: {{ .Values.cast_service.deployment.ports }}
-      nodePort: {{ .Values.cast_service.service.nodeport }} 
+    - protocol: {{ .Values.cast-service.service.protocol }}
+      port: {{ .Values.cast-service.service.port }}
+      targetPort: {{ .Values.cast-service.deployment.ports }}
+      nodePort: {{ .Values.cast-service.service.nodeport }} 
 
 ---
 
 apiVersion: apps/v1
-kind: {{ .Values.cast_service.deployment.kind }}
+kind: {{ .Values.cast-service.deployment.kind }}
 metadata:
-  name: {{ .Values.cast_service.name }}
+  name: {{ .Values.cast-service.name }}
   labels:
-    app: {{ .Values.cast_service.name }}
+    app: {{ .Values.cast-service.name }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.cast_service.name }}
-  replicas: {{ .Values.cast_service.deployment.replicaCount }}
+      app: {{ .Values.cast-service.name }}
+  replicas: {{ .Values.cast-service.deployment.replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ .Values.cast_service.name }}
+        app: {{ .Values.cast-service.name }}
     spec:
       containers:
-        - name: {{ .Values.cast_service.deployment.name }}
-          image: "{{ .Values.cast_service.deployment.image.repository }}:{{ .Values.cast_service.deployment.image.tag | default .Values.imageTag }}"
+        - name: {{ .Values.cast-service.deployment.name }}
+          image: "{{ .Values.cast-service.deployment.image.repository }}:{{ .Values.cast-service.deployment.image.tag | default .Values.imageTag }}"
           command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
           ports:
-            - containerPort: {{ .Values.cast_service.deployment.ports }}
+            - containerPort: {{ .Values.cast-service.deployment.ports }}
           env:
-            - DATABASE_URI: postgresql://{{ .Values.cast_db.username }}:{{ .Values.cast_db.password }}@{{ .Values.cast_db.name }}/{{ .Values.cast_db.secret.db }}
-            - CAST_SERVICE: http://{{ .Values.cast_service.name }}:{{ .Values.cast_service.service.port }}/api/v1/casts
+            - DATABASE_URI: postgresql://{{ .Values.cast-db.username }}:{{ .Values.cast-db.password }}@{{ .Values.cast-db.name }}/{{ .Values.cast-db.secret.db }}
+            - CAST_SERVICE: http://{{ .Values.cast-service.name }}:{{ .Values.cast-service.service.port }}/api/v1/casts
