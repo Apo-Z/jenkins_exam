@@ -100,7 +100,7 @@ pipeline {
                         ls -la
                         cat $KUBE_CONFIG > .kube/config
                         cat .kube/config
-                        kubectl create configmap nginx-config --from-file=nginx_conf.conf
+                        kubectl create configmap nginx-config --from-file=nginx_config.conf
                     '''
                 }
             }
