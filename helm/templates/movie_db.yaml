@@ -28,7 +28,6 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: hpa-{{ .Values.movie_db.name }}
-  namespace: {{ .Values.namespace }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

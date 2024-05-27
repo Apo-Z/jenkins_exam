@@ -81,7 +81,7 @@ cast_service:
 cast_db:
   name: cast_db
   deployment:
-    kind: StatefulSets
+    kind: StatefulSet
     name: cast_db
     image:
       repository: "postgres"
