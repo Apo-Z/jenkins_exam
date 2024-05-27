@@ -15,12 +15,12 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ .Values.cast_db.name }}
+  name: {{ .Values.movie_db.name }}
 type: Opaque
 data:
-  POSTGRES_DB: {{ .Values.cast_db.secret.db | b64enc }}
-  POSTGRES_USER: {{ .Values.cast_db.secret.username | b64enc }}
-  POSTGRES_PASSWORD: {{ .Values.cast_db.secret.password | b64enc }}
+  POSTGRES_DB: {{ .Values.movie_db.secret.db | b64enc }}
+  POSTGRES_USER: {{ .Values.movie_db.secret.username | b64enc }}
+  POSTGRES_PASSWORD: {{ .Values.movie_db.secret.password | b64enc }}
 
 ---
 apiVersion: autoscaling/v1
