@@ -87,22 +87,22 @@ pipeline {
                 }
             }
         }
-        // stage('Setup Kubernetes Config') {
-        //     environment {
-        //         KUBE_CONFIG = credentials("config")
-        //     }
-        //     steps {
-        //         script {
-        //             sh '''
-        //                 rm -Rf .kube
-        //                 mkdir .kube
-        //                 ls -la
-        //                 cat $KUBE_CONFIG > .kube/config
-        //                 cat .kube/config
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('Setup Kubernetes Config') {
+            environment {
+                KUBE_CONFIG = credentials("config")
+            }
+            steps {
+                script {
+                    sh '''
+                        rm -Rf .kube
+                        mkdir .kube
+                        ls -la
+                        cat $KUBE_CONFIG > .kube/config
+                        cat .kube/config
+                    '''
+                }
+            }
+        }
         stage('Deploy to Dev') {
             steps {
                 script {
@@ -149,10 +149,6 @@ pipeline {
 def deployToenvironment(env) {
     withEnv(["NAMESPACE=${env}"]) {
         sh '''
-            rm -Rf .kube
-            mkdir .kube
-            ls -la
-            cat $KUBE_CONFIG > .kube/config
             cat .kube/config                  
             helm upgrade --install app helm/ \
                 --values=helm/values.yaml \
