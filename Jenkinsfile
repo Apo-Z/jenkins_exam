@@ -100,7 +100,6 @@ pipeline {
                         ls -la
                         cat $KUBE_CONFIG > .kube/config
                         cat .kube/config
-                        kubectl create configmap nginx-config --from-file=nginx_config.conf
                     '''
                 }
             }
@@ -159,6 +158,7 @@ def deployToenvironment(env) {
     }
     withEnv(["NAMESPACE=${env}"]) {
         sh '''
+            kubectl create configmap nginx-config --from-file=nginx_config.conf -n $NAMESPACE
             sudo helm upgrade --install app helm/ \
                 --values=helm/values.yaml \
                 --namespace $NAMESPACE \

@@ -30,7 +30,6 @@ spec:
 
 ---
 
-
 apiVersion: apps/v1
 kind: {{ .Values.nginx.deployment.kind }}
 metadata:
