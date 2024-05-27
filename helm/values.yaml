@@ -99,7 +99,7 @@ cast_db:
   pvc:
     accessMode: ReadWriteOnce
     storage: 10Gi
-    storageClassName: local-path  
+    storageClassName: local-path
   secret:
     db: 'admin'
     username: 'admin'
