@@ -52,13 +52,10 @@ spec:
           ports:
             - containerPort: {{ .Values.nginx.deployment.ports }}
           volumeMounts:
-            - name: nginx-conf
+            - name: nginx-conf-file
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
       volumes:
-        - name: nginx-conf
+        - name: nginx-conf-file
           configMap:
             name: nginx-conf
-            items:
-              - keys: nginx.conf
-                path: nginx.conf
