@@ -5,7 +5,7 @@
 imagePullSecrets:
   - name: regcred
 
-movie-service:
+movie_service:
   name: movie-service
   deployment:
     kind: Deployment
@@ -28,7 +28,7 @@ movie-service:
     storage: 10Gi
     storageClassName: local-path  
 
-movie-db:
+movie_db:
   name: movie-db
   deployment:
     kind: StatefulSet
@@ -55,7 +55,7 @@ movie-db:
     username: movie-db-username
     password: movie-db-password
 
-cast-service:
+cast_service:
   name: cast-service
   deployment:
     kind: Deployment
@@ -78,7 +78,7 @@ cast-service:
     storage: 10Gi
     storageClassName: local-path  
 
-cast-db:
+cast_db:
   name: cast-db
   deployment:
     kind: StatefulSet
