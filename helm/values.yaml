@@ -51,9 +51,9 @@ movie_db:
     storage: 10Gi
     storageClassName: local-path  
   secret:
-    db: 'admin'
-    username: 'admin'
-    password: 'password'
+    db: movie_db_dev
+    username: movie_db_username
+    password: movie_db_password
 
 cast_service:
   name: cast_service
@@ -101,10 +101,9 @@ cast_db:
     storage: 10Gi
     storageClassName: local-path
   secret:
-    db: admin
-    username: admin
-    password: password
-
+    db: cast_db_dev
+    username: cast_db_username
+    password: cast_db_password
 
 nginx:
   name: nginx
