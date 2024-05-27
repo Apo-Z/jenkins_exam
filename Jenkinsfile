@@ -165,12 +165,6 @@ def deployToenvironment(env) {
                 --set movie_service.image.tag=$DOCKER_TAG \
                 --set cast_service.image.repository=$DOCKER_CAST_IMAGE \
                 --set cast_service.image.tag=$DOCKER_TAG \
-                --set movie_db.secret.db=$MOVIE_DB_NAME \
-                --set movie_db.secret.username=$MOVIE_DB_USER \
-                --set movie_db.secret.password=$MOVIE_DB_PASSWORD \
-                --set cast_db.secret.db=$CAST_DB_NAME \
-                --set cast_db.secret.username=$CAST_DB_USER \
-                --set cast_db.secret.password=$CAST_DB_PASSWORD \
             '''
     }
 }
