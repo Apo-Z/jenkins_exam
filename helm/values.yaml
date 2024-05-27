@@ -5,13 +5,13 @@
 imagePullSecrets:
   - name: regcred
 
-movie_service:
-  name: movie_service
+movie-service:
+  name: movie-service
   deployment:
     kind: Deployment
-    name: movie_service
+    name: movie-service
     image:
-      repository: "apooz/jenkins-exam-movie_service"
+      repository: "apooz/jenkins-exam-movie-service"
       tag: ""
     replicaCount: 3
     ports: 8000
@@ -28,11 +28,11 @@ movie_service:
     storage: 10Gi
     storageClassName: local-path  
 
-movie_db:
-  name: movie_db
+movie-db:
+  name: movie-db
   deployment:
     kind: StatefulSet
-    name: movie_db
+    name: movie-db
     image:
       repository: "postgres"
       tag: "12.1-alpine"
@@ -51,17 +51,17 @@ movie_db:
     storage: 10Gi
     storageClassName: local-path  
   secret:
-    db: movie_db_dev
-    username: movie_db_username
-    password: movie_db_password
+    db: movie-db-dev
+    username: movie-db-username
+    password: movie-db-password
 
-cast_service:
-  name: cast_service
+cast-service:
+  name: cast-service
   deployment:
     kind: Deployment
-    name: cast_service
+    name: cast-service
     image:
-      repository: "apooz/jenkins-exam-cast_service"
+      repository: "apooz/jenkins-exam-cast-service"
       tag: ""
     replicaCount: 3
     ports: 8000
@@ -78,11 +78,11 @@ cast_service:
     storage: 10Gi
     storageClassName: local-path  
 
-cast_db:
-  name: cast_db
+cast-db:
+  name: cast-db
   deployment:
     kind: StatefulSet
-    name: cast_db
+    name: cast-db
     image:
       repository: "postgres"
       tag: "12.1-alpine"
@@ -101,9 +101,9 @@ cast_db:
     storage: 10Gi
     storageClassName: local-path
   secret:
-    db: cast_db_dev
-    username: cast_db_username
-    password: cast_db_password
+    db: cast-db-dev
+    username: cast-db-username
+    password: cast-db-password
 
 nginx:
   name: nginx
