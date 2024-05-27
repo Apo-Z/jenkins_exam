@@ -2,56 +2,56 @@
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
- name: hpa-{{ .Values.movie-service.name }}
+ name: hpa-{{ .Values.movie_service.name }}
 spec:
  scaleTargetRef:
    apiVersion: apps/v1
-   kind: {{ .Values.movie-service.deployment.kind }}
-   name: {{ .Values.movie-service.name }}
- minReplicas: {{ .Values.movie-service.hpa.minReplicas }}
- maxReplicas: {{ .Values.movie-service.hpa.maxReplicas }}
- targetCPUUtilizationPercentage: {{ .Values.movie-service.hpa.targetCPUUtilizationPercentage }}
+   kind: {{ .Values.movie_service.deployment.kind }}
+   name: {{ .Values.movie_service.name }}
+ minReplicas: {{ .Values.movie_service.hpa.minReplicas }}
+ maxReplicas: {{ .Values.movie_service.hpa.maxReplicas }}
+ targetCPUUtilizationPercentage: {{ .Values.movie_service.hpa.targetCPUUtilizationPercentage }}
 
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.movie-service.name }}
+  name: {{ .Values.movie_service.name }}
 spec:
-  type: {{ .Values.movie-service.service.type }}
+  type: {{ .Values.movie_service.service.type }}
   selector:
-    app: {{ .Values.movie-service.name }}
+    app: {{ .Values.movie_service.name }}
   ports:
-    - protocol: {{ .Values.movie-service.service.protocol }}
-      port: {{ .Values.movie-service.service.port }}
-      targetPort: {{ .Values.movie-service.deployment.ports }}
-      nodePort: {{ .Values.movie-service.service.nodeport }} 
+    - protocol: {{ .Values.movie_service.service.protocol }}
+      port: {{ .Values.movie_service.service.port }}
+      targetPort: {{ .Values.movie_service.deployment.ports }}
+      nodePort: {{ .Values.movie_service.service.nodeport }} 
 
 ---
 
 apiVersion: apps/v1
-kind: {{ .Values.movie-service.deployment.kind }}
+kind: {{ .Values.movie_service.deployment.kind }}
 metadata:
-  name: {{ .Values.movie-service.name }}
+  name: {{ .Values.movie_service.name }}
   labels:
-    app: {{ .Values.movie-service.name }}
+    app: {{ .Values.movie_service.name }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.movie-service.name }}
-  replicas: {{ .Values.movie-service.deployment.replicaCount }}
+      app: {{ .Values.movie_service.name }}
+  replicas: {{ .Values.movie_service.deployment.replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ .Values.movie-service.name }}
+        app: {{ .Values.movie_service.name }}
     spec:
       containers:
-        - name: {{ .Values.movie-service.deployment.name }}
-          image: "{{ .Values.movie-service.deployment.image.repository }}:{{ .Values.movie-service.deployment.image.tag | default .Values.imageTag }}"
+        - name: {{ .Values.movie_service.deployment.name }}
+          image: "{{ .Values.movie_service.deployment.image.repository }}:{{ .Values.movie_service.deployment.image.tag | default .Values.imageTag }}"
           command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
           ports:
-            - containerPort: {{ .Values.movie-service.deployment.ports }}
+            - containerPort: {{ .Values.movie_service.deployment.ports }}
           env:
-            - DATABASE_URI: postgresql://{{ .Values.movie-db.username }}:{{ .Values.movie-db.password }}@{{ .Values.movie-db.name }}/{{ .Values.movie-db.secret.db }}
-            - CAST_SERVICE: http://{{ .Values.cast-service.name }}:{{ .Values.cast-service.service.port }}/api/v1/casts
+            - DATABASE_URI: postgresql://{{ .Values.movie_db.username }}:{{ .Values.movie_db.password }}@{{ .Values.movie_db.name }}/{{ .Values.movi_db.secret.db }}
+            - CAST_SERVICE: http://{{ .Values.cast_service.name }}:{{ .Values.cast_service.service.port }}/api/v1/casts

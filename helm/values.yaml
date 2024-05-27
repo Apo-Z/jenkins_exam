@@ -5,13 +5,13 @@
 imagePullSecrets:
   - name: regcred
 
-movie-service:
-  name: movie-service
+movie_service:
+  name: movie_service
   deployment:
     kind: Deployment
-    name: movie-service
+    name: movie_service
     image:
-      repository: "apooz/jenkins-exam-movie-service"
+      repository: "apooz/jenkins-exam-movie_service"
       tag: ""
     replicaCount: 3
     ports: 8000
@@ -28,11 +28,11 @@ movie-service:
     storage: 10Gi
     storageClassName: local-path  
 
-movie-db:
-  name: movie-db
+movie_db:
+  name: movie_db
   deployment:
     kind: StatefulSet
-    name: movie-db
+    name: movie_db
     image:
       repository: "postgres"
       tag: "12.1-alpine"
@@ -51,17 +51,17 @@ movie-db:
     storage: 10Gi
     storageClassName: local-path  
   secret:
-    db: movie-db-dev
+    db: movie_db_dev
     username: movie_db_username
     password: movie_db_password
 
-cast-service:
-  name: cast-service
+cast_service:
+  name: cast_service
   deployment:
     kind: Deployment
-    name: cast-service
+    name: cast_service
     image:
-      repository: "apooz/jenkins-exam-cast-service"
+      repository: "apooz/jenkins-exam-cast_service"
       tag: ""
     replicaCount: 3
     ports: 8000
@@ -78,11 +78,11 @@ cast-service:
     storage: 10Gi
     storageClassName: local-path  
 
-cast-db:
-  name: cast-db
+cast_db:
+  name: cast_db
   deployment:
     kind: StatefulSet
-    name: cast-db
+    name: cast_db
     image:
       repository: "postgres"
       tag: "12.1-alpine"
