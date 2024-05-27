@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-{{ .Values.orders.name }}
+spec:
+  accessModes:
+    - {{ .Values.orders.pvc.accessMode }}
+  storageClassName: {{ .Values.orders.pvc.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.orders.pvc.storage }}
+
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: hpa-{{ .Values.orders.name }}
+ namespace: {{ .Values.namespace }}
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: {{ .Values.orders.deployment.kind }}
+   name: {{ .Values.orders.name }}
+ minReplicas: {{ .Values.orders.hpa.minReplicas }}
+ maxReplicas: {{ .Values.orders.hpa.maxReplicas }}
+ targetCPUUtilizationPercentage: {{ .Values.orders.hpa.targetCPUUtilizationPercentage }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.orders.name }}
+spec:
+  selector:
+    app: {{ .Values.orders.name }}
+  ports:
+    - protocol: {{ .Values.orders.service.protocol }}
+      port: {{ .Values.orders.service.port }}
+      targetPort: {{ .Values.orders.deployment.ports }}
+
+---
+
+apiVersion: apps/v1
+kind: {{ .Values.orders.deployment.kind }}
+metadata:
+  name: {{ .Values.orders.name }}
+  labels:
+    app: {{ .Values.orders.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.orders.name }}
+  replicas: {{ .Values.orders.deployment.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.orders.name }}
+    spec:
+      containers:
+        - name: {{ .Values.orders.deployment.name }}
+          image: "{{ .Values.orders.deployment.image.repository }}:{{ .Values.orders.deployment.image.tag | default .Values.imageTag }}"
+          ports:
+            - containerPort: {{ .Values.orders.deployment.ports }}

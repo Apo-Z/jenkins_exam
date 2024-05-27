@@ -1,0 +1,76 @@
+# Default values for helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+imagePullSecrets:
+  - name: regcred
+
+gateway:
+  name: gateway
+  deployment:
+    kind: Deployment
+    name: gateway
+    image:
+      repository: "apooz/gitlab-devops-exam-gateway"
+      tag: ""
+    replicaCount: 3
+    ports: 8000
+  hpa:
+    minReplicas: 3
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+  service:
+    type: NodePort
+    protocol: TCP
+    port: 8001
+  pvc:
+    accessMode: ReadWriteOnce
+    storage: 10Gi
+    storageClassName: local-path  
+
+users:
+  name: users
+  deployment:
+    kind: Deployment
+    name: users
+    image:
+      repository: "apooz/gitlab-devops-exam-users"
+      tag: ""
+    replicaCount: 3
+    ports: 8000
+  hpa:
+    minReplicas: 3
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+  service:
+    type: ClusterIP
+    protocol: TCP
+    port: 8000
+  pvc:
+    accessMode: ReadWriteOnce
+    storage: 10Gi
+    storageClassName: local-path  
+
+orders:
+  name: orders
+  deployment:
+    kind: Deployment
+    name: orders
+    image:
+      repository: "apooz/gitlab-devops-exam-users"
+      tag: ""
+    replicaCount: 3
+    ports: 8000
+  hpa:
+    minReplicas: 3
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+  service:
+    type: ClusterIP
+    protocol: TCP
+    port: 8000
+  pvc:
+    accessMode: ReadWriteOnce
+    storage: 10Gi
+    storageClassName: local-path  
+
