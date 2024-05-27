@@ -150,7 +150,7 @@ def deployToenvironment(env) {
             mkdir .kube
             ls
             cat $KUBECONFIG > .kube/config                     
-            helm upgrade --install app helm/ \
+            sudo helm upgrade --install app helm/ \
                 --values=helm/values.yaml \
                 --namespace $NAMESPACE \
                 --set movie_service.image.repository=$DOCKER_MOVIE_IMAGE \
